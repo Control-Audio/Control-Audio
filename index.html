@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Hugo 0.66.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,600" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
+  <link rel="stylesheet" href="../css/normalize.css">
+  <link rel="stylesheet" href="../css/skeleton.css">
+  <link rel="stylesheet" href="../css/custom.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="alternate" href="index.xml" type="application/rss+xml" title="Speech Research">
+  <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
+  <title>FreeAudio: Training-Free Timing Planning for Controllable Long-Form Text-to-Audio Generation</title>
+</head>
+
+<!-- <body rightmargin="150" leftmargin="150" topmargin="100" bottommargin="100" line-height:160%> -->
+
+<body>
+  <font size="5">
+
+    <div class="container">
+
+      <header role="banner">
+
+      </header>
+      <main role="main">
+        <article itemscope itemtype="https://schema.org/BlogPosting">
+          <br></br>
+          <h1 itemprop="headline" align="center">
+            <font color="000093" size="7">FreeAudio: Training-Free Timing Planning for Controllable Long-Form
+              Text-to-Audio Generation</br>
+            </font>
+          </h1>
+          <br>
+
+          <p align="center" style="margin-top: -10px; margin-bottom: 20px;">
+            <font color="#061E61" size="5.5"><b>| Accepted at ACM MultiMedia 2025 |</b></font>
+          </p>
+
+          <p style="line-height:1" align="center"><b>
+              <font color="#061E61">
+                NIMING<sup>1,2,*</sup>,
+              </font>
+            </b></p>
+          <section itemprop="entry-text">
+            <br>
+            <h2 id="abstract">
+              <font color="000093">Abstract</font>
+            </h2>
+            <p style="text-align: justify;">
+              <font color="061E61">
+                Text-to-audio (T2A) generation has achieved promising results with the recent progress of generative
+                models.
+                However, because of the limited quality and quantity of temporally-aligned audio-text data pairs,
+                existing T2A methods usually face challenges when handling the complex text prompts that contain precise
+                timing control,
+                <i>e.g.</i>, <i>owl hooted at 2.4s–5.2s</i>.
+                Recent works have explored data augmentation techniques or taken timing conditions as model input to
+                enable timing-conditioned 10-second T2A generation, while their synthesis quality is still limited.
+                In this work, we propose a novel training-free timing-controlled T2A framework, FreeAudio, making the
+                first attempt to enable
+                <i>timing-controlled long-form T2A generation</i>,
+                <i>e.g.</i>,
+                <i>owl hooted at 2.4s–5.2s and crickets chirping at 0s–24s</i>.
+                Specifically, we first employ LLM for a timing-to-window planning, decomposing the text prompts with
+                complex timing control into multiple time windows of varying lengths.
+                Then we introduce: 1) decoupling and aggregating attention control for precise timing control
+                capabilities;
+                2) contextual latent composition and reference guidance for coherent long-form generation capabilities,
+                respectively.
+                Extensive experiments show that:
+                1) FreeAudio achieves a new record of timing-conditioned T2A synthesis quality among training-free
+                methods and is comparable to state-of-the-art training-based method;
+                2) FreeAudio demonstrates comparable long-form generation quality with training-based Stable Audio and
+                paves the way for timing-controlled long-form T2A synthesis.
+
+              </font>
+            </p>
+
+            <h2 id="note">
+              <font color="000093">Contribution</font>
+            </h2>
+            <li>
+              <font color="061E61"> We propose FreeAudio, the first training-free text-to-audio framework that enables
+                both precise temporal control and coherent long-form generation from complex natural language prompts.
+              </font>
+            </li>
+            <li>
+              <font color="061E61"> To achieve fine-grained alignment without training, we introduce Decoupling &
+                Aggregating Attention Control and Contextual Latent Composition, along with Reference Guidance for
+                global consistency. </font>
+            </li>
+            <li>
+              <font color="061E61"> Despite requiring no training or supervision, FreeAudio delivers competitive or
+                superior performance in both temporal precision and structural coherence across extensive evaluations.
+              </font>
+            </li>
+
+            <br></br>
+            <figure>
+              <p align="center"><img src="figure/framework.png" width="100%" class="center" /></p>
+              <figcaption>
+                <p style="text-align: justify;">
+                  <font color="#061E61"><b>Figure 1:</b> <i>Left</i>: Planning Stage, where the LLM parses the text
+                    prompt and timing prompts into a sequence of non-overlapping time windows, each associated with a
+                    recaptioned prompt. <i>Right</i>: Generation Stage, where the Decoupling & Aggregating Attention
+                    Control aligns each recaptioned prompt with its corresponding time window, enabling precise timing
+                    control in attention layers.
+                </p>
+              </figcaption>
+            </figure>
+
+            <br>
+            <h2 id="Timing-controlled Long-Form Audio Generation">
+              <font color="000093">Timing-controlled Long-Form Audio Generation</font>
+            </h2>
+
+            <table class="table" align="center" style="table-layout: fixed; word-break: break-word; width: 100%;">
+              <thead>
+                <tr>
+                  <td width="50%">
+                    <font color="061E61">
+                      <b>Text prompt</b><br>
+                      Birds chirp in the background as a man speaks, followed by a dog barking. Later, a car speeds by,
+                      and a child laughs in the distance.
+                    </font>
+                  </td>
+                  <td width="50%">
+                    <font color="061E61">
+                      <b>Timing prompt</b><br>
+                      1. 0s - 10s. Birds chirping in the background. <br>
+                      2. 0s - 6s. Man speaking. <br>
+                      3. 6s - 10s. Dog barking. <br>
+                      4. 10s - 14s. A car speeds by on a nearby road. <br>
+                      5. 14s - 20s. A child laughs in the distance.
+                    </font>
+                  </td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td colspan="2" align="center">
+                    <audio controls style="width: 100%;">
+                      <source src="samples/tc_lf_ag/demo_01.wav" autoplay />
+                      Your browser does not support the audio element.
+                    </audio>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2" align="center">
+                    <img src="samples/tc_lf_ag/demo_01.png" style="width: 81.15%; margin-left: 4.12%;" />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table class="table" align="center" style="table-layout: fixed; word-break: break-word; width: 100%;">
+              <thead>
+                <tr>
+                  <td width="50%">
+                    <font color="061E61">
+                      <b>Text prompt</b><br>
+                      In a quiet forest, the wind blows softly as birds chirp and a fire crackles nearby. Footsteps
+                      rustle through dry leaves, crickets chirp continuously, an owl calls briefly, and a stream flows
+                      steadily in the distance.
+                    </font>
+                  </td>
+                  <td width="50%">
+                    <font color="061E61">
+                      <b>Timing prompt</b><br>
+                      1. 0s - 10s. Forest wind blowing. <br>
+                      2. 0s - 4s. Birds chirping. <br>
+                      3. 4s - 6s. Wood burning. <br>
+                      4. 6s - 16s. Animal footsteps on dry leaves. <br>
+                      5. 10s - 16s. Crickets chirping. <br>
+                      6. 16s - 19s. Owl chirping. <br>
+                      7. 17s - 26s. Stream water flowing.
+                    </font>
+                  </td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td colspan="2" align="center">
+                    <audio controls style="width: 100%;">
+                      <source src="samples/tc_lf_ag/demo_02.wav" autoplay />
+                      Your browser does not support the audio element.
+                    </audio>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2" align="center">
+                    <img src="samples/tc_lf_ag/demo_02.png" style="width: 81.15%; margin-left: 4.12%;" />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table class="table" align="center" style="table-layout: fixed; word-break: break-word; width: 100%;">
+              <thead>
+                <tr>
+                  <td width="50%">
+                    <font color="061E61">
+                      <b>Text prompt</b><br>
+                      A country music song with a strong, expressive male vocal leading the melody, accompanied by soft
+                      acoustic guitar and minimal instrumentation.
+                    </font>
+                  </td>
+                  <td width="50%">
+                    <font color="061E61">
+                      <b>Timing prompt</b><br>
+                      1. 0s - 8s. Soft acoustic guitar strumming sets the rhythm. <br>
+                      2. 8s - 16s. The male vocal enters, expressively leading the melody alongside the guitar. <br>
+                      3. 16s - 22s. The vocals rise emotionally while the acoustic guitar maintains a steady background.
+                      <br>
+                      4. 22s - 26s. The song softens slightly, with the gentle guitar continuing to play.
+                    </font>
+                  </td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td colspan="2" align="center">
+                    <audio controls style="width: 100%;">
+                      <source src="samples/tc_lf_ag/demo_03.wav" autoplay />
+                      Your browser does not support the audio element.
+                    </audio>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2" align="center">
+                    <img src="samples/tc_lf_ag/demo_03.png" style="width: 81.15%; margin-left: 4.12%;" />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <br></br>
+            <h2 id="Timing-Controlled Audio Generation">
+              <font color="000093">Timing-Controlled Audio Generation</font>
+            </h2>
+
+            <table class="table" align="center"
+              style="table-layout: fixed; word-break: break-word; width: 100%; border-collapse: collapse; border: 1px solid #ccc;">
+              <thead>
+                <tr>
+                  <td colspan="5" style="border: 1px solid #ccc;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                      <tr>
+                        <td width="50%" style="border-right: 1px solid #ccc; padding: 8px;">
+                          <font color="061E61">
+                            <b>Text prompt</b><br>
+                            A bathtub is being filled or washed.
+                          </font>
+                        </td>
+                        <td width="50%" style="padding: 8px;">
+                          <font color="061E61">
+                            <b>Timing prompt</b><br>
+                            Bathtub (filling or washing): 0.0s - 6.598s <br>
+                            Bathtub (filling or washing): 6.748s - 10.0s
+                          </font>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <th style="text-align: center; border: 1px solid #ccc;">FreeAudio(Ours)</th>
+                  <td style="text-align: center; border: 1px solid #ccc;">AudioLDM2</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">Tango</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">Stable Audio*</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">Ground Truth</td>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/tc_ag/01/freeaudio.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/tc_ag/01/audioldm2.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/tc_ag/01/tango.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/tc_ag/01/sa.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/tc_ag/01/gt.png" style="width: 100%;" />
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/tc_ag/01/freeaudio.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/tc_ag/01/audioldm2.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/tc_ag/01/tango.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/tc_ag/01/sa.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/tc_ag/01/gt.wav" autoplay />
+                    </audio>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table class="table" align="center"
+              style="table-layout: fixed; word-break: break-word; width: 100%; border-collapse: collapse; border: 1px solid #ccc;">
+              <thead>
+                <tr>
+                  <td colspan="5" style="border: 1px solid #ccc;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                      <tr>
+                        <td width="50%" style="border-right: 1px solid #ccc; padding: 8px;">
+                          <font color="061E61">
+                            <b>Text prompt</b><br>
+                            Music is playing and women and children are speaking, while water is gushing and bells are
+                            ringing.
+                          </font>
+                        </td>
+                        <td width="50%" style="padding: 8px;">
+                          <font color="061E61">
+                            <b>Timing prompt</b><br>
+                            Female speech, woman speaking: 0.008s - 1.701s <br>
+                            Child speech, kid speaking: 1.701s - 2.276s
+                          </font>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <th style="text-align: center; border: 1px solid #ccc;">FreeAudio(Ours)</th>
+                  <td style="text-align: center; border: 1px solid #ccc;">AudioLDM2</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">Tango</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">Stable Audio*</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">Ground Truth</td>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/tc_ag/02/freeaudio.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/tc_ag/02/audioldm2.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/tc_ag/02/tango.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/tc_ag/02/sa.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/tc_ag/02/gt.png" style="width: 100%;" />
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/tc_ag/02/freeaudio.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/tc_ag/02/audioldm2.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/tc_ag/02/tango.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/tc_ag/02/sa.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/tc_ag/02/gt.wav" autoplay />
+                    </audio>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table class="table" align="center"
+              style="table-layout: fixed; word-break: break-word; width: 100%; border-collapse: collapse; border: 1px solid #ccc;">
+              <thead>
+                <tr>
+                  <td colspan="5" style="border: 1px solid #ccc;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                      <tr>
+                        <td width="50%" style="border-right: 1px solid #ccc; padding: 8px;">
+                          <font color="061E61">
+                            <b>Text prompt</b><br>
+                            Sounds of patter, birds, and cats with chirping and tweeting.
+                          </font>
+                        </td>
+                        <td width="50%" style="padding: 8px;">
+                          <font color="061E61">
+                            <b>Timing prompt</b><br>
+                            Cat: 7.742s - 8.724s
+                          </font>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <th style="text-align: center; border: 1px solid #ccc;">FreeAudio(Ours)</th>
+                  <td style="text-align: center; border: 1px solid #ccc;">AudioLDM2</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">Tango</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">Stable Audio*</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">Ground Truth</td>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/tc_ag/03/freeaudio.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/tc_ag/03/audioldm2.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/tc_ag/03/tango.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/tc_ag/03/sa.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/tc_ag/03/gt.png" style="width: 100%;" />
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/tc_ag/03/freeaudio.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/tc_ag/03/audioldm2.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/tc_ag/03/tango.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/tc_ag/03/sa.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/tc_ag/03/gt.wav" autoplay />
+                    </audio>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table class="table" align="center"
+              style="table-layout: fixed; word-break: break-word; width: 100%; border-collapse: collapse; border: 1px solid #ccc;">
+              <thead>
+                <tr>
+                  <td colspan="5" style="border: 1px solid #ccc;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                      <tr>
+                        <td width="50%" style="border-right: 1px solid #ccc; padding: 8px;">
+                          <font color="061E61">
+                            <b>Text prompt</b><br>
+                            A telephone rings repeatedly.
+                          </font>
+                        </td>
+                        <td width="50%" style="padding: 8px;">
+                          <font color="061E61">
+                            <b>Timing prompt</b><br>
+                            Telephone bell ringing: 0.0s - 2.221s<br>
+                            Telephone bell ringing: 2.568s - 8.022s<br>
+                            Telephone bell ringing: 8.473s - 10.0s
+                          </font>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <th style="text-align: center; border: 1px solid #ccc;">FreeAudio(Ours)</th>
+                  <td style="text-align: center; border: 1px solid #ccc;">AudioLDM2</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">Tango</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">Stable Audio*</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">Ground Truth</td>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/tc_ag/04/freeaudio.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/tc_ag/04/audioldm2.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/tc_ag/04/tango.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/tc_ag/04/sa.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/tc_ag/04/gt.png" style="width: 100%;" />
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/tc_ag/04/freeaudio.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/tc_ag/04/audioldm2.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/tc_ag/04/tango.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/tc_ag/04/sa.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/tc_ag/04/gt.wav" autoplay />
+                    </audio>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- TODO -->
+            <br></br>
+            <h2 id="Long-Form Audio Generation">
+              <font color="000093">Long-Form Audio Generation</font>
+            </h2>
+
+            Base means that the text prompt is entered directly without going through the LLM Planning process.
+
+            <table class="table" align="center" style="table-layout: fixed;word-break:break-word">
+              <thead>
+                <tr>
+                  <th scope="col" colspan="5" width="100%">
+                    <font color="061E61">Prompt: An adult male is speaking and an audience is laughing.</font>
+                    <details>
+                      <summary style="cursor: pointer; color: #FF0000;">
+                        Planning Sub-Prompt (<span style="text-decoration: underline;">You can click me!</span>)
+                      </summary>
+                      <font color="061E61">
+                        1. 0–7s: An adult male speaks calmly while audience members whisper softly in the
+                        background.<br>
+                        2. 7–11s: An adult male speaks with energy, accompanied by quiet murmurs and occasional giggles
+                        from the audience.<br>
+                        3. 11–15s: An adult male makes a statement as the audience begins to chuckle audibly in the
+                        background.<br>
+                        4. 15–19s: An adult male speaks as the audience bursts into loud laughter and lively
+                        reactions.<br>
+                        5. 19–26s: An adult male speaks with confidence while the audience chatters and laughs in the
+                        background.
+                      </font>
+                    </details>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row" style="text-align: center;">FreeAudio(Ours)</th>
+                  <th scope="row" style="text-align: center;">FreeAudio(Base)</th>
+                  <td style="text-align: center;">AudioLDM2</td>
+                  <td style="text-align: center;">AudioGen</td>
+                  <td style="text-align: center;">Stable Audio Open</td>
+                </tr>
+                <tr>
+                  <th scope="row" style="text-align: center;">
+                    <div>
+                      <audio controls style="width: 90%;">
+                        <source src="./samples/lf_ag/00/freeaudio_plan.wav" autoplay />
+                      </audio>
+                    </div>
+                  </th>
+
+                  <th scope="row" style="text-align: center;">
+                    <div>
+                      <audio controls style="width: 90%;">
+                        <source src="./samples/lf_ag/00/freeaudio_base.wav" autoplay />
+                      </audio>
+                    </div>
+                  </th>
+
+                  <th scope="row" style="text-align: center;">
+                    <div>
+                      <audio controls style="width: 90%;">
+                        <source src="./samples/lf_ag/00/audioldm2.wav" autoplay />
+                      </audio>
+                    </div>
+                  </th>
+
+                  <th scope="row" style="text-align: center;">
+                    <div>
+                      <audio controls style="width: 90%;">
+                        <source src="./samples/lf_ag/00/audiogen.wav" autoplay />
+                      </audio>
+                    </div>
+                  </th>
+
+                  <th scope="row" style="text-align: center;">
+                    <div>
+                      <audio controls style="width: 90%;">
+                        <source src="./samples/lf_ag/00/sao.wav" autoplay />
+                      </audio>
+                    </div>
+                  </th>
+                </tr>
+              </tbody>
+            </table>
+
+            <table class="table" align="center" style="table-layout: fixed;word-break:break-word">
+              <thead>
+                <tr>
+                  <th scope="col" colspan="5" width="100%">
+                    <font color="061E61">Prompt: Food sizzles as a man speaks with music playing.</font>
+                    <details>
+                      <summary style="cursor: pointer; color: #FF0000; text-decoration: underline;">Planning Sub-Prompt
+                      </summary>
+                      <font color="061E61">
+                        1. 0–7s: Food sizzles gently in a quiet kitchen environment.<br>
+                        2. 7–10s: A man speaks in a steady voice with sizzling sounds nearby.<br>
+                        3. 10–21s: Soft background music plays while food sizzles in the foreground.<br>
+                        4. 21–26s: An immersive blend of food sizzling, male speech, and melodic background music.<br>
+                      </font>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row" style="text-align: center;">FreeAudio(Ours)</th>
+                  <th scope="row" style="text-align: center;">FreeAudio(Base)</th>
+                  <td style="text-align: center;">AudioLDM2</td>
+                  <td style="text-align: center;">AudioGen</td>
+                  <td style="text-align: center;">Stable Audio Open</td>
+                </tr>
+                <tr>
+                  <th scope="row" style="text-align: center;">
+                    <div>
+                      <audio controls style="width: 90%;">
+                        <source src="./samples/lf_ag/01/freeaudio_plan.wav" autoplay />
+                      </audio>
+                    </div>
+                  </th>
+
+                  <th scope="row" style="text-align: center;">
+                    <div>
+                      <audio controls style="width: 90%;">
+                        <source src="./samples/lf_ag/01/freeaudio_base.wav" autoplay />
+                      </audio>
+                    </div>
+                  </th>
+
+                  <th scope="row" style="text-align: center;">
+                    <div>
+                      <audio controls style="width: 90%;">
+                        <source src="./samples/lf_ag/01/audioldm2.wav" autoplay />
+                      </audio>
+                    </div>
+                  </th>
+
+                  <th scope="row" style="text-align: center;">
+                    <div>
+                      <audio controls style="width: 90%;">
+                        <source src="./samples/lf_ag/01/audiogen.wav" autoplay />
+                      </audio>
+                    </div>
+                  </th>
+
+                  <th scope="row" style="text-align: center;">
+                    <div>
+                      <audio controls style="width: 90%;">
+                        <source src="./samples/lf_ag/01/sao.wav" autoplay />
+                      </audio>
+                    </div>
+                  </th>
+                </tr>
+              </tbody>
+            </table>
+
+            <table class="table" align="center" style="table-layout: fixed;word-break:break-word">
+              <thead>
+                <tr>
+                  <th scope="col" colspan="5" width="100%">
+                    <font color="061E61">Prompt: A man shouting as another man talks in the background while a series of
+                      gunshots fire and footsteps running on concrete followed by guns cocking and a dog growling.
+                    </font>
+                    <details>
+                      <summary style="cursor: pointer; color: #FF0000; text-decoration: underline;">Planning Sub-Prompt
+                      </summary>
+                      <font color="061E61">
+                        1. 0–6s: A man is shouting loudly in an open area, his voice echoing with urgency.<br>
+                        2. 6–11s: Another man murmurs softly in the background, his voice nearly drowned out by the
+                        surrounding noise.<br>
+                        3. 11–15s: Gunshots fire sharply through the air, creating a tense and chaotic soundscape.<br>
+                        4. 15–19s: Footsteps rush across a concrete surface with rapid, uneven pacing.<br>
+                        5. 19–26s: Guns cock mechanically as dogs growl deeply nearby.<br>
+                      </font>
+                    </details>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row" style="text-align: center;">FreeAudio(Ours)</th>
+                  <th scope="row" style="text-align: center;">FreeAudio(Base)</th>
+                  <td style="text-align: center;">AudioLDM2</td>
+                  <td style="text-align: center;">AudioGen</td>
+                  <td style="text-align: center;">Stable Audio Open</td>
+                </tr>
+                <tr>
+                  <th scope="row" style="text-align: center;">
+                    <div>
+                      <audio controls style="width: 90%;">
+                        <source src="./samples/lf_ag/02/freeaudio_plan.wav" autoplay />
+                      </audio>
+                    </div>
+                  </th>
+
+                  <th scope="row" style="text-align: center;">
+                    <div>
+                      <audio controls style="width: 90%;">
+                        <source src="./samples/lf_ag/02/freeaudio_base.wav" autoplay />
+                      </audio>
+                    </div>
+                  </th>
+
+                  <th scope="row" style="text-align: center;">
+                    <div>
+                      <audio controls style="width: 90%;">
+                        <source src="./samples/lf_ag/02/audioldm2.wav" autoplay />
+                      </audio>
+                    </div>
+                  </th>
+
+                  <th scope="row" style="text-align: center;">
+                    <div>
+                      <audio controls style="width: 90%;">
+                        <source src="./samples/lf_ag/02/audiogen.wav" autoplay />
+                      </audio>
+                    </div>
+                  </th>
+
+                  <th scope="row" style="text-align: center;">
+                    <div>
+                      <audio controls style="width: 90%;">
+                        <source src="./samples/lf_ag/02/sao.wav" autoplay />
+                      </audio>
+                    </div>
+                  </th>
+                </tr>
+              </tbody>
+            </table>
+
+            <table class="table" align="center" style="table-layout: fixed;word-break:break-word">
+              <thead>
+                <tr>
+                  <th scope="col" colspan="5" width="100%">
+                    <font color="061E61">Prompt: The low quality recording features a lullaby that consists of soft
+                      bells melody. It sounds like a music box melody and it is relaxing, passionate and mellow.</font>
+                    <details>
+                      <summary style="cursor: pointer; text-decoration: underline; color: #FF0000;">Planning Sub-Prompt
+                      </summary>
+                      <font color="061E61">
+                        1. 0–6s: A soft lullaby plays with bell-like tones in a low-fidelity recording.<br>
+                        2. 6–10s: Gentle music box melodies ring out with delicate bell chimes.<br>
+                        3. 10–12s: A mellow and relaxing bell-driven tune flows in a warm acoustic space.<br>
+                        4. 12–20s: Passionate and soothing lullaby melodies emerge through lo-fi textures.<br>
+                        5. 20–26s: A calming atmosphere of softly ringing bells evokes a dreamy, peaceful mood.<br>
+                      </font>
+                    </details>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row" style="text-align: center;">FreeAudio(Ours)</th>
+                  <th scope="row" style="text-align: center;">FreeAudio(Base)</td>
+                  <td style="text-align: center;">AudioLDM2</td>
+                  <td style="text-align: center;">MusicGen</td>
+                  <td style="text-align: center;">Stable Audio Open</td>
+                </tr>
+                <tr>
+                  <th scope="row" style="text-align: center;">
+                    <div>
+                      <audio controls style="width: 90%;">
+                        <source src="./samples/lf_ag/03/freeaudio_plan.wav" autoplay />
+                      </audio>
+                    </div>
+                  </th>
+
+                  <th scope="row" style="text-align: center;">
+                    <div>
+                      <audio controls style="width: 90%;">
+                        <source src="./samples/lf_ag/03/freeaudio_base.wav" autoplay />
+                      </audio>
+                    </div>
+                  </th>
+
+                  <th scope="row" style="text-align: center;">
+                    <div>
+                      <audio controls style="width: 90%;">
+                        <source src="./samples/lf_ag/03/audioldm2.wav" autoplay />
+                      </audio>
+                    </div>
+                  </th>
+
+                  <th scope="row" style="text-align: center;">
+                    <div>
+                      <audio controls style="width: 90%;">
+                        <source src="./samples/lf_ag/03/musicgen.wav" autoplay />
+                      </audio>
+                    </div>
+                  </th>
+
+                  <th scope="row" style="text-align: center;">
+                    <div>
+                      <audio controls style="width: 90%;">
+                        <source src="./samples/lf_ag/03/sao.wav" autoplay />
+                      </audio>
+                    </div>
+                  </th>
+                </tr>
+              </tbody>
+            </table>
+
+            <table class="table" align="center" style="table-layout: fixed;word-break:break-word">
+              <thead>
+                <tr>
+                  <th scope="col" colspan="5" width="100%">
+                    <font color="061E61">Prompt: This is an instrumental cover of a ballad piece. The harp is gently
+                      playing the melody with improvisational touches differing from the original version. There is a
+                      calming and soothing atmosphere to this piece. This music could be playing in the background at a
+                      hotel or a spa resort.</font>
+                    <details>
+                      <summary style="cursor: pointer; text-decoration: underline; color: #FF0000;">Planning Sub-Prompt
+                      </summary>
+                      <font color="061E61">
+                        1. 0–6s: A solo harp plays a soft and flowing melody, evoking a gentle ballad style.<br>
+                        2. 6–10s: The harp introduces subtle improvisations with delicate rhythmic changes.<br>
+                        3. 10–16s: Expressive harp flourishes add a personal touch to the familiar ballad theme.<br>
+                        4. 16–20s: Warm harp tones resonate with relaxed timing and spontaneous melodic turns.<br>
+                        5. 20–26s: Ambient harp phrases unfold in a peaceful space, suggesting a live spa or hotel
+                        performance.<br>
+                      </font>
+                    </details>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row" style="text-align: center;">FreeAudio(Ours)</th>
+                  <th scope="row" style="text-align: center;">FreeAudio(Base)</th>
+                  <td style="text-align: center;">AudioLDM2</td>
+                  <td style="text-align: center;">MusicGen</td>
+                  <td style="text-align: center;">Stable Audio Open</td>
+                </tr>
+                <tr>
+                  <th scope="row" style="text-align: center;">
+                    <div>
+                      <audio controls style="width: 90%;">
+                        <source src="./samples/lf_ag/04/freeaudio_plan.wav" autoplay />
+                      </audio>
+                    </div>
+                  </th>
+                  <th scope="row" style="text-align: center;">
+                    <div>
+                      <audio controls style="width: 90%;">
+                        <source src="./samples/lf_ag/04/freeaudio_base.wav" autoplay />
+                      </audio>
+                    </div>
+                  </th>
+
+                  <th scope="row" style="text-align: center;">
+                    <div>
+                      <audio controls style="width: 90%;">
+                        <source src="./samples/lf_ag/04/audioldm2.wav" autoplay />
+                      </audio>
+                    </div>
+                  </th>
+
+                  <th scope="row" style="text-align: center;">
+                    <div>
+                      <audio controls style="width: 90%;">
+                        <source src="./samples/lf_ag/04/musicgen.wav" autoplay />
+                      </audio>
+                    </div>
+                  </th>
+
+                  <th scope="row" style="text-align: center;">
+                    <div>
+                      <audio controls style="width: 90%;">
+                        <source src="./samples/lf_ag/04/sao.wav" autoplay />
+                      </audio>
+                    </div>
+                  </th>
+                </tr>
+              </tbody>
+            </table>
+
+          </section>
+        </article>
+        
+      </main>
+      <br>
+      <hr>
+      <br>
+
+      <p align="center">
+        <font color="#061E61" size="5.5"><b>BibTex</b></font>
+      </p>
+
+      <pre style="font-size:18px;">
+@inproceedings{jiang2025freeaudio,
+  title     = {FreeAudio: Training-Free Timing Planning for Controllable Long-Form Text-to-Audio Generation},
+  author    = {Yuxuan Jiang and Zehua Chen and Zeqian Ju and Chang Li and Weibei Dou and Jun Zhu},
+  booktitle = {Proceedings of the 2025 ACM International Conference on Multimedia (ACM MM)},
+  year      = {2025}
+}
+      </pre>
+
+    </div>
+
+    <script>
+      (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+          (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date(); a = s.createElement(o),
+          m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+      })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+      ga('create', 'UA-139981676-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+
+
+    <script type="text/x-mathjax-config">
+     MathJax.Hub.Config({
+         HTML: ["input/TeX","output/HTML-CSS"],
+         TeX: {
+                Macros: {
+                         bm: ["\\boldsymbol{#1}", 1],
+                         argmax: ["\\mathop{\\rm arg\\,max}\\limits"],
+                         argmin: ["\\mathop{\\rm arg\\,min}\\limits"]},
+                extensions: ["AMSmath.js","AMSsymbols.js"],
+                equationNumbers: { autoNumber: "AMS" } },
+         extensions: ["tex2jax.js"],
+         jax: ["input/TeX","output/HTML-CSS"],
+         tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                    displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                    processEscapes: true },
+         "HTML-CSS": { availableFonts: ["TeX"],
+                       linebreaks: { automatic: true } }
+     });
+ </script>
+
+    <script type="text/x-mathjax-config">
+     MathJax.Hub.Config({
+       tex2jax: {
+         skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+       }
+     });
+ </script>
+
+    <script type="text/javascript" async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+      </script>
+
+</body>
+
+</html>
+
+<style>
+  body {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+</style>
