@@ -14,7 +14,7 @@
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link rel="alternate" href="index.xml" type="application/rss+xml" title="Speech Research">
   <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
-  <title>FreeAudio: Training-Free Timing Planning for Controllable Long-Form Text-to-Audio Generation</title>
+  <title>ControlAudio: Timing-Controlled and Intelligible Text-to-Audio Generation</title>
 </head>
 
 <!-- <body rightmargin="150" leftmargin="150" topmargin="100" bottommargin="100" line-height:160%> -->
@@ -31,7 +31,7 @@
         <article itemscope itemtype="https://schema.org/BlogPosting">
           <br></br>
           <h1 itemprop="headline" align="center">
-            <font color="000093" size="7">ControlAudio: Intelligible Timing-Controlled Text-to-Audio Generation via Structured Prompt Conditioning</br>
+            <font color="000093" size="7">ControlAudio: Timing-Controlled and Intelligible Text-to-Audio Generation</br>
             </font>
           </h1>
           <br>
@@ -52,7 +52,7 @@
             </h2>
             <p style="text-align: justify;">
               <font color="061E61">
-Recent advances in text-to-audio (T2A) generation have enabled high-quality audio generation from natural language. As applications increasingly demand structured audio with fine-grained control, precise timing has become essential for controllable audio generation. While recent methods have begun to explore timing-controlled T2A generation, they still suffer from limited control precision and poor generalization to open-ended language descriptions. These limitations become even more pronounced when the input involves speech events, where generated content often lacks intelligibility and semantic fidelity. In this work, we propose ControlAudio, a framework for intelligible timing-controlled text-to-audio generation. ControlAudio introduces a structured prompt format—automatically planned by an LLM—that encodes event semantics, time intervals, and optional speech content as unified inputs. Built upon a pretrained T2A backbone, our method supports open-ended natural language event descriptions with explicit timing control, and enables content-level control by extending the text encoder’s vocabulary with phoneme tokens. ControlAudio advances the controllability of T2A models in three aspects: it enables open-domain caption understanding under timing control settings with strong zero-shot generalization, achieves high temporal precision through structured prompt planning, and supports intelligible audio generation with competitive content accuracy. Extensive experiments validate the effectiveness of ControlAudio in generating temporally aligned and semantically faithful audio across a range of text-to-audio tasks.
+                Recent advances in text-to-audio (T2A) generation have enabled high-quality audio generation from natural language. As applications increasingly demand structured audio with fine-grained control, precise timing has become essential for controllable audio generation. While previous methods have begun to explore timing-controlled T2A generation, they still lack both precision of control and richness in semantic description. Specifically for speech events, the generated audio often lacks intelligibility and control over its content. In this study, we propose ControlAudio, a timing-controlled and intelligible T2A system for free-form natural language inputs. First, we leverage the reasoning capabilities of a Large Language Model (LLM) to plan the sequence of existing sound events, their temporal spans, and the speech content. We then introduce a structured prompt to encode this information and implement a two-stage pretraining and fine-tuning strategy to achieve a robust mapping from semantic descriptions to their specified timing. Furthermore, to support speech intelligibility, we construct a large-scale synthetic dataset with timing and content annotations, and extend the structured prompt by integrating phoneme-level tokens into the text encoder's vocabulary. Extensive experimental results demonstrate that ControlAudio outperforms previous models on real-world datasets, showcasing significant improvements in timing control, audio quality, and content intelligibility.
               </font>
             </p>
 
