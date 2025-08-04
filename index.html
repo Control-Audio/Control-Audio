@@ -31,18 +31,18 @@
         <article itemscope itemtype="https://schema.org/BlogPosting">
           <br></br>
           <h1 itemprop="headline" align="center">
-            <font color="000093" size="7">ControlAudio: Timing-Controlled and Intelligible Text-to-Audio Generation</br>
+            <font color="000093" size="8">ControlAudio: Timing-Controlled and Intelligible 
+              </br>
+            </font>
+            <font color="000093" size="8">
+              Text-to-Audio Generation</br>
             </font>
           </h1>
           <br>
-
-          <p align="center" style="margin-top: -10px; margin-bottom: 20px;">
-            <font color="#061E61" size="5.5"><b>| Submit to AAAI 2026 |</b></font>
-          </p>
-
+          
           <p style="line-height:1" align="center"><b>
               <font color="#061E61">
-                NIMING<sup>1,2,*</sup>,
+                Anonymous submission
               </font>
             </b></p>
           <section itemprop="entry-text">
@@ -55,8 +55,523 @@
                 Recent advances in text-to-audio (T2A) generation have enabled high-quality audio generation from natural language. As applications increasingly demand structured audio with fine-grained control, precise timing has become essential for controllable audio generation. While previous methods have begun to explore timing-controlled T2A generation, they still lack both precision of control and richness in semantic description. Specifically for speech events, the generated audio often lacks intelligibility and control over its content. In this study, we propose ControlAudio, a timing-controlled and intelligible T2A system for free-form natural language inputs. First, we leverage the reasoning capabilities of a Large Language Model (LLM) to plan the sequence of existing sound events, their temporal spans, and the speech content. We then introduce a structured prompt to encode this information and implement a two-stage pretraining and fine-tuning strategy to achieve a robust mapping from semantic descriptions to their specified timing. Furthermore, to support speech intelligibility, we construct a large-scale synthetic dataset with timing and content annotations, and extend the structured prompt by integrating phoneme-level tokens into the text encoder's vocabulary. Extensive experimental results demonstrate that ControlAudio outperforms previous models on real-world datasets, showcasing significant improvements in timing control, audio quality, and content intelligibility.
               </font>
             </p>
-
             
+            <br>
+
+            <h2 id="note">
+              <font color="000093">Contribution</font>
+            </h2>
+            <li>
+              <font color="061E61"> 
+                We propose ControlAudio, a novel timing-controlled and intelligible T2A framework that leverages CoT reasoning with an LLM to plan the sequence of audio events, their temporal spans, and corresponding speech content from free-form natural language descriptions.
+              </font>
+            </li>
+            <li>
+              <font color="061E61"> 
+                We design a structured prompt and adopt a two-stage pretraining and fine-tuning strategy based on these prompts to establish a precise mapping from event descriptions to their temporal spans.
+              </font>
+            </li>
+            <li>
+              <font color="061E61"> 
+                We construct a large-scale synthetic dataset with both timing and content annotations, and extend the text encoder’s vocabulary with phoneme-level tokens, while treating the temporal span of each speech event as its total duration.
+              </font>
+            </li>
+            <li>
+              <font color="061E61"> 
+                We conduct extensive experiments demonstrating that our ControlAudio method outperforms existing methods in both subjective evaluation and objective metrics on multiple benchmarks.
+              </font>
+            </li>
+
+            <br><br>
+
+            <figure>
+              <p align="center"><img src="figures/LLM_Planning.png" width="100%" class="center" /></p>
+              <figcaption>
+                <p style="text-align: justify;">
+                  <font color="#061E61"><b>Figure 1:</b> Overview of our CoT-based LLM planning pipeline. Given a user-provided free-form caption, the LLM performs multi-step reasoning to extract audio events with their temporal spans, infer speech content when applicable, and generate a structured prompt that encodes both timing and content for controllable audio generation.
+                </p>
+              </figcaption>
+            </figure>
+
+            <br></br>
+
+            <figure>
+              <p align="center"><img src="figures/ControlAudio.png" width="100%" class="center" /></p>
+              <figcaption>
+                <p style="text-align: justify;">
+                  <font color="#061E61"><b>Figure 2:</b> ControlAudio takes structured prompt inputs and jointly fine-tunes the diffusion model and text encoder to achieve precise timing control. To support speech intelligibility, we extend the structured prompts with explicit speech content, augment the text encoder’s vocabulary with phoneme tokens, and introduce a lightweight phoneme embedding module e<sub>p</sub>.
+                </p>
+              </figcaption>
+            </figure>
+            
+            <br></br>
+            <h2 id="Timing-Controlled Audio Generation">
+              <font color="000093">Timing-Controlled Audio Generation</font>
+            </h2>
+
+            <table class="table" align="center"
+              style="table-layout: fixed; word-break: break-word; width: 100%; border-collapse: collapse; border: 1px solid #ccc;">
+              <thead>
+                <tr>
+                  <td colspan="6" style="border: 1px solid #ccc;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                      <tr>
+                        <td width="50%" style="border-right: 1px solid #ccc; padding: 8px;">
+                          <font color="061E61">
+                            <b>Text prompt</b><br>
+                            A bathtub is being filled or washed.
+                          </font>
+                        </td>
+                        <td width="50%" style="padding: 8px;">
+                          <font color="061E61">
+                            <b>Timing prompt</b><br>
+                            Bathtub (filling or washing): 0.0s - 6.598s <br>
+                            Bathtub (filling or washing): 6.748s - 10.0s
+                          </font>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <th style="text-align: center; border: 1px solid #ccc;">ControlAudio</th>
+                  <td style="text-align: center; border: 1px solid #ccc;">AudioLDM</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">Tango</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">Stable Audio*</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">AudioComposer</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">Ground Truth</td>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Timing/F/001.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Timing/B/001.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Timing/C/001.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Timing/D/001.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Timing/E/001.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Timing/A/001.png" style="width: 100%;" />
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Timing/F/001.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Timing/B/001.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Timing/C/001.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Timing/D/001.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Timing/E/001.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Timing/A/001.wav" autoplay />
+                    </audio>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table class="table" align="center"
+              style="table-layout: fixed; word-break: break-word; width: 100%; border-collapse: collapse; border: 1px solid #ccc;">
+              <thead>
+                <tr>
+                  <td colspan="6" style="border: 1px solid #ccc;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                      <tr>
+                        <td width="50%" style="border-right: 1px solid #ccc; padding: 8px;">
+                          <font color="061E61">
+                            <b>Text prompt</b><br>
+                            A woman sings with music and an alarm clock sounds.
+                          </font>
+                        </td>
+                        <td width="50%" style="padding: 8px;">
+                          <font color="061E61">
+                            <b>Timing prompt</b><br>
+                            A woman sings: 0.00s - 6.73s <br>
+                            Alarm clock: 6.73s - 10.00s
+                          </font>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <th style="text-align: center; border: 1px solid #ccc;">ControlAudio</th>
+                  <td style="text-align: center; border: 1px solid #ccc;">AudioLDM</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">Tango</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">Stable Audio*</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">AudioComposer</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">Ground Truth</td>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Timing/F/002.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Timing/B/002.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Timing/C/002.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Timing/D/002.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Timing/E/002.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Timing/A/002.png" style="width: 100%;" />
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Timing/F/002.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Timing/B/002.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Timing/C/002.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Timing/D/002.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Timing/E/002.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Timing/A/002.wav" autoplay />
+                    </audio>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table class="table" align="center"
+              style="table-layout: fixed; word-break: break-word; width: 100%; border-collapse: collapse; border: 1px solid #ccc;">
+              <thead>
+                <tr>
+                  <td colspan="6" style="border: 1px solid #ccc;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                      <tr>
+                        <td width="50%" style="border-right: 1px solid #ccc; padding: 8px;">
+                          <font color="061E61">
+                            <b>Text prompt</b><br>
+                            A telephone rings repeatedly.
+                          </font>
+                        </td>
+                        <td width="50%" style="padding: 8px;">
+                          <font color="061E61">
+                            <b>Timing prompt</b><br>
+                            Telephone bell ringing: 0.0s - 2.221s<br>
+                            Telephone bell ringing: 2.568s - 8.022s<br>
+                            Telephone bell ringing: 8.473s - 10.0s
+                          </font>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <th style="text-align: center; border: 1px solid #ccc;">ControlAudio</th>
+                  <td style="text-align: center; border: 1px solid #ccc;">AudioLDM</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">Tango</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">Stable Audio*</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">AudioComposer</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">Ground Truth</td>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Timing/F/003.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Timing/B/003.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Timing/C/003.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Timing/D/003.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Timing/E/003.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Timing/A/003.png" style="width: 100%;" />
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Timing/F/003.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Timing/B/003.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Timing/C/003.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Timing/D/003.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Timing/E/003.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Timing/A/003.wav" autoplay />
+                    </audio>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table class="table" align="center"
+              style="table-layout: fixed; word-break: break-word; width: 100%; border-collapse: collapse; border: 1px solid #ccc;">
+              <thead>
+                <tr>
+                  <td colspan="6" style="border: 1px solid #ccc;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                      <tr>
+                        <td width="50%" style="border-right: 1px solid #ccc; padding: 8px;">
+                          <font color="061E61">
+                            <b>Text prompt</b><br>
+                            A man is speaking and an engine is running.
+                          </font>
+                        </td>
+                        <td width="50%" style="padding: 8px;">
+                          <font color="061E61">
+                            <b>Timing prompt</b><br>
+                            Engine is running : 1.40s - 10.00s<br>
+                            Male speech, man speaking : 0.00s - 1.40s
+                          </font>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <th style="text-align: center; border: 1px solid #ccc;">ControlAudio</th>
+                  <td style="text-align: center; border: 1px solid #ccc;">AudioLDM</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">Tango</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">Stable Audio*</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">AudioComposer</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">Ground Truth</td>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Timing/F/004.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Timing/B/004.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Timing/C/004.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Timing/D/004.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Timing/E/004.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Timing/A/004.png" style="width: 100%;" />
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Timing/F/004.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Timing/B/004.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Timing/C/004.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Timing/D/004.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Timing/E/004.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Timing/A/004.wav" autoplay />
+                    </audio>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            
+            <table class="table" align="center"
+              style="table-layout: fixed; word-break: break-word; width: 100%; border-collapse: collapse; border: 1px solid #ccc;">
+              <thead>
+                <tr>
+                  <td colspan="6" style="border: 1px solid #ccc;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                      <tr>
+                        <td width="50%" style="border-right: 1px solid #ccc; padding: 8px;">
+                          <font color="061E61">
+                            <b>Text prompt</b><br>
+                            Music plays, followed by mechanisms, typing, beeps, and an alarm.
+                          </font>
+                        </td>
+                        <td width="50%" style="padding: 8px;">
+                          <font color="061E61">
+                            <b>Timing prompt</b><br>
+                            Music : 0.00s - 10.00s<br>
+                            Beeps : 1.00s - 1.20s  3.00s - 3.20s  4.90s - 5.10s  6.90s - 7.10s<br>
+                            Typing : 0.00s - 10.00s<br>
+                            Alarm : 7.85s - 8.50s
+                          </font>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <th style="text-align: center; border: 1px solid #ccc;">ControlAudio</th>
+                  <td style="text-align: center; border: 1px solid #ccc;">AudioLDM</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">Tango</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">Stable Audio*</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">AudioComposer</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">Ground Truth</td>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Timing/F/005.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Timing/B/005.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Timing/C/005.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Timing/D/005.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Timing/E/005.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Timing/A/005.png" style="width: 100%;" />
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Timing/F/005.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Timing/B/005.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Timing/C/005.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Timing/D/005.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Timing/E/005.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Timing/A/005.wav" autoplay />
+                    </audio>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
     </div>
 
     <script>
