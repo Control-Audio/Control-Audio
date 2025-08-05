@@ -496,7 +496,7 @@
                             <b>Timing prompt</b><br>
                             Music : 0.00s - 10.00s<br>
                             Beeps : 1.00s - 1.20s  3.00s - 3.20s  4.90s - 5.10s  6.90s - 7.10s<br>
-                            Typing : 0.00s - 10.00s<br>
+                            Typing : 1.20s - 7.80s<br>
                             Alarm : 7.85s - 8.50s
                           </font>
                         </td>
@@ -571,8 +571,600 @@
                 </tr>
               </tbody>
             </table>
+            
 
-    </div>
+            <br></br>
+            <h2 id="Intelligible Audio Generation">
+              <font color="000093">Intelligible Audio Generation</font>
+            </h2>
+
+            <table class="table" align="center"
+              style="table-layout: fixed; word-break: break-word; width: 100%; border-collapse: collapse; border: 1px solid #ccc;">
+              <thead>
+                <tr>
+                  <td colspan="5" style="border: 1px solid #ccc;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                      <tr>
+                        <td width="50%" style="border-right: 1px solid #ccc; padding: 8px;">
+                          <font color="061E61">
+                            <b>Text prompt</b><br>
+                            People talking with the dull roar of a vehicle on the road.
+                          </font>
+                        </td>
+                        <td width="50%" style="padding: 8px;">
+                          <font color="061E61">
+                            <b>Content prompt</b><br>
+                            What is she doing? What the fuck? What the fuck? She's in the middle of the road. Mate, he's on a joyride.
+                          </font>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <th style="text-align: center; border: 1px solid #ccc;">ControlAudio</th>
+                  <td style="text-align: center; border: 1px solid #ccc;">AudioLDM 2 Speech</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">VoiceLDM S</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">VoiceLDM M</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">Ground Truth</td>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Intelligible/E/001.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Intelligible/B/001.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Intelligible/C/001.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Intelligible/D/001.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Intelligible/A/001.png" style="width: 100%;" />
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Intelligible/E/001.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Intelligible/B/001.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Intelligible/C/001.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Intelligible/D/001.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Intelligible/A/001.wav" autoplay />
+                    </audio>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table class="table" align="center"
+              style="table-layout: fixed; word-break: break-word; width: 100%; border-collapse: collapse; border: 1px solid #ccc;">
+              <thead>
+                <tr>
+                  <td colspan="5" style="border: 1px solid #ccc;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                      <tr>
+                        <td width="50%" style="border-right: 1px solid #ccc; padding: 8px;">
+                          <font color="061E61">
+                            <b>Text prompt</b><br>
+                            A gun cocking followed by a gunshot and a man talking.
+                          </font>
+                        </td>
+                        <td width="50%" style="padding: 8px;">
+                          <font color="061E61">
+                            <b>Content prompt</b><br>
+                            There you see? No problem.
+                          </font>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <th style="text-align: center; border: 1px solid #ccc;">ControlAudio</th>
+                  <td style="text-align: center; border: 1px solid #ccc;">AudioLDM 2 Speech</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">VoiceLDM S</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">VoiceLDM M</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">Ground Truth</td>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Intelligible/E/002.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Intelligible/B/002.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Intelligible/C/002.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Intelligible/D/002.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Intelligible/A/002.png" style="width: 100%;" />
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Intelligible/E/002.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Intelligible/B/002.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Intelligible/C/002.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Intelligible/D/002.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Intelligible/A/002.wav" autoplay />
+                    </audio>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table class="table" align="center"
+              style="table-layout: fixed; word-break: break-word; width: 100%; border-collapse: collapse; border: 1px solid #ccc;">
+              <thead>
+                <tr>
+                  <td colspan="5" style="border: 1px solid #ccc;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                      <tr>
+                        <td width="50%" style="border-right: 1px solid #ccc; padding: 8px;">
+                          <font color="061E61">
+                            <b>Text prompt</b><br>
+                            A man speaking over an intercom as a crowd of people talk followed by a dog barking.
+                          </font>
+                        </td>
+                        <td width="50%" style="padding: 8px;">
+                          <font color="061E61">
+                            <b>Content prompt</b><br>
+                            and contain them until that person can be taken into custody effectively and safely on the part of the other team of police sheriffs.
+                          </font>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <th style="text-align: center; border: 1px solid #ccc;">ControlAudio</th>
+                  <td style="text-align: center; border: 1px solid #ccc;">AudioLDM 2 Speech</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">VoiceLDM S</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">VoiceLDM M</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">Ground Truth</td>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Intelligible/E/003.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Intelligible/B/003.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Intelligible/C/003.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Intelligible/D/003.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Intelligible/A/003.png" style="width: 100%;" />
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Intelligible/E/003.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Intelligible/B/003.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Intelligible/C/003.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Intelligible/D/003.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Intelligible/A/003.wav" autoplay />
+                    </audio>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table class="table" align="center"
+              style="table-layout: fixed; word-break: break-word; width: 100%; border-collapse: collapse; border: 1px solid #ccc;">
+              <thead>
+                <tr>
+                  <td colspan="5" style="border: 1px solid #ccc;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                      <tr>
+                        <td width="50%" style="border-right: 1px solid #ccc; padding: 8px;">
+                          <font color="061E61">
+                            <b>Text prompt</b><br>
+                            Daniel came out of the airport. He raised one arm to hail a taxi.
+                          </font>
+                        </td>
+                        <td width="50%" style="padding: 8px;">
+                          <font color="061E61">
+                            <b>Content prompt</b><br>
+                            Females voice narrating a scene as music is playing and rain drops are falling.
+                          </font>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <th style="text-align: center; border: 1px solid #ccc;">ControlAudio</th>
+                  <td style="text-align: center; border: 1px solid #ccc;">AudioLDM 2 Speech</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">VoiceLDM S</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">VoiceLDM M</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">Ground Truth</td>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Intelligible/E/004.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Intelligible/B/004.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Intelligible/C/004.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Intelligible/D/004.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Intelligible/A/004.png" style="width: 100%;" />
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Intelligible/E/004.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Intelligible/B/004.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Intelligible/C/004.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Intelligible/D/004.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Intelligible/A/004.wav" autoplay />
+                    </audio>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table class="table" align="center"
+              style="table-layout: fixed; word-break: break-word; width: 100%; border-collapse: collapse; border: 1px solid #ccc;">
+              <thead>
+                <tr>
+                  <td colspan="5" style="border: 1px solid #ccc;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                      <tr>
+                        <td width="50%" style="border-right: 1px solid #ccc; padding: 8px;">
+                          <font color="061E61">
+                            <b>Text prompt</b><br>
+                            Splashing water followed by a girl speaking then scraping and spitting.
+                          </font>
+                        </td>
+                        <td width="50%" style="padding: 8px;">
+                          <font color="061E61">
+                            <b>Content prompt</b><br>
+                            This is the last time you did that first thing. Same thing.
+                          </font>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <th style="text-align: center; border: 1px solid #ccc;">ControlAudio</th>
+                  <td style="text-align: center; border: 1px solid #ccc;">AudioLDM 2 Speech</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">VoiceLDM S</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">VoiceLDM M</td>
+                  <td style="text-align: center; border: 1px solid #ccc;">Ground Truth</td>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Intelligible/E/005.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Intelligible/B/005.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Intelligible/C/005.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Intelligible/D/005.png" style="width: 100%;" />
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Intelligible/A/005.png" style="width: 100%;" />
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Intelligible/E/005.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Intelligible/B/005.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Intelligible/C/005.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Intelligible/D/005.wav" autoplay />
+                    </audio>
+                  </td>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Intelligible/A/005.wav" autoplay />
+                    </audio>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+    
+            <br></br>
+            <h2 id="Intelligible Audio Generation">
+              <font color="000093">Case Study (Unseen Description in Training Dataset)</font>
+            </h2>
+
+            <table class="table" align="center"
+              style="table-layout: fixed; word-break: break-word; width: 100%; border-collapse: collapse; border: 1px solid #ccc;">
+              <thead>
+                <tr>
+                  <td colspan="1" style="border: 1px solid #ccc;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                      <tr>
+                        <td width="100%" style="border-right: 1px solid #ccc; padding: 8px;">
+                          <font color="061E61">
+                            <b>Structured Prompt</b><br>
+                            @{A melodious country music. & <0.00,8.00>}@{A fierce drumbeat. & <8.00,10.00>}
+                          </font>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <th style="text-align: center; border: 1px solid #ccc;">ControlAudio</th>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Unseen/001.png" style="width: 100%;" />
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Unseen/001.wav" autoplay />
+                    </audio>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+
+            <table class="table" align="center"
+              style="table-layout: fixed; word-break: break-word; width: 100%; border-collapse: collapse; border: 1px solid #ccc;">
+              <thead>
+                <tr>
+                  <td colspan="1" style="border: 1px solid #ccc;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                      <tr>
+                        <td width="100%" style="border-right: 1px solid #ccc; padding: 8px;">
+                          <font color="061E61">
+                            <b>Structured Prompt</b><br>
+                            @{A soft piano music. & <0.00,10.00>}@{Flute melody. & <2.00,4.00><6.00,8.00>}
+                          </font>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <th style="text-align: center; border: 1px solid #ccc;">ControlAudio</th>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Unseen/002.png" style="width: 100%;" />
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Unseen/002.wav" autoplay />
+                    </audio>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            
+
+            <br></br>
+            <h2 id="Intelligible Audio Generation">
+              <font color="000093">Case Study (Intelligible Speech Content)</font>
+            </h2>
+
+            <table class="table" align="center"
+              style="table-layout: fixed; word-break: break-word; width: 100%; border-collapse: collapse; border: 1px solid #ccc;">
+              <thead>
+                <tr>
+                  <td colspan="1" style="border: 1px solid #ccc;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                      <tr>
+                        <td width="100%" style="border-right: 1px solid #ccc; padding: 8px;">
+                          <font color="061E61">
+                            <b>Structured Prompt</b><br>
+                            @{Rain & <0.00,10.00>}<br>
+                            @{Female speech, woman speaking & <1.00,5.50> "saying earlier, first day of spring and there's flurries in the forecast. There are. I have the hiccups."}<br>
+                            @{Male speech, man speaking & <6.50,9.50> "And uh, you know, it's coming earlier this year. We're still in March. March is still a month"}
+                          </font>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <th style="text-align: center; border: 1px solid #ccc;">ControlAudio</th>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Speech/001.png" style="width: 100%;" />
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Speech/001.wav" autoplay />
+                    </audio>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+
+            <table class="table" align="center"
+              style="table-layout: fixed; word-break: break-word; width: 100%; border-collapse: collapse; border: 1px solid #ccc;">
+              <thead>
+                <tr>
+                  <td colspan="1" style="border: 1px solid #ccc;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                      <tr>
+                        <td width="100%" style="border-right: 1px solid #ccc; padding: 8px;">
+                          <font color="061E61">
+                            <b>Structured Prompt</b><br>
+                            @{Old radio tuning static. & <0.00,10.00>}<br>
+                            @{A robot speaking. & <4.00,7.25> "The war alien has been identified."}
+                          </font>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <th style="text-align: center; border: 1px solid #ccc;">ControlAudio</th>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <img src="./samples/Speech/002.png" style="width: 100%;" />
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="text-align: center; border: 1px solid #ccc;">
+                    <audio controls style="width: 90%;">
+                      <source src="./samples/Speech/002.wav" autoplay />
+                    </audio>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
 
     <script>
       (function (i, s, o, g, r, a, m) {
